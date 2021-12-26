@@ -10,15 +10,17 @@ const validateTodo = (req, res, next) => {
         next()
     }
 }
+
 const validateUserTodo = async (req, res, next) => {
     const UserID=req.user.id
-    let userTodos = await Todo.findOne({user:UserID})
-    console.log(userTodos.user, UserID)
-    if(!userTodos.user==UserID){
-        res.status(404).send("Not found")
-      
+    const {id}=req.params
+    let userTodos = await Todo.find({user:UserID})
+    const todo = userTodos.filter(t=>t.id==id)
+    console.log(todo)
+    if(todo.length==0){
+        res.status(404).send("Not found")    
     }
-    next()
+    next(todo)
     
 }
 
